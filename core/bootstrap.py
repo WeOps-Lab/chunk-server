@@ -1,8 +1,14 @@
 import uvicorn
+from langserve import add_routes
+
 from core.server_settings import server_settings
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
+
+from runnable.file_chunk_runnable import FileChunkRunnable
+from runnable.manual_chunk_runnable import ManualChunkRunnable
+from runnable.web_page_chunk_runnable import WebPageChunkRunnable
 
 
 class Bootstrap:
@@ -21,7 +27,9 @@ class Bootstrap:
         )
 
     def setup_router(self):
-        pass
+        add_routes(self.app, FileChunkRunnable().instance(), path="/file_chunk")
+        add_routes(self.app, WebPageChunkRunnable().instance(), path="/webpage_chunk")
+        add_routes(self.app, ManualChunkRunnable().instance(), path="/manual_chunk")
 
     def start(self):
         self.setup_middlewares()
