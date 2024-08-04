@@ -21,3 +21,8 @@ install-hook:
 
 lint:
 	pre-commit run --all-files
+
+setup-base:
+	git remote add base https://github.com/WeOps-Lab/langserve-base.git
+	git config pull.rebase false
+	git pull base main --allow-unrelated-histories

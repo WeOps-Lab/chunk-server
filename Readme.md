@@ -4,4 +4,4 @@
 ----------|------|----------------
  APP_NAME | 应用名称 | langserve-base 
  APP_HOST | 侦听地址 | 0.0.0.0        
- APP_PORT | 侦听端口 | 8080           
+ APP_PORT | 侦听端口 | 8000           
