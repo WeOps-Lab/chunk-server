@@ -8,6 +8,7 @@ from langchain_core.documents import Document
 from langchain_core.runnables import RunnableLambda
 from loguru import logger
 
+from core.server_settings import server_settings
 from loader.doc_loader import DocLoader
 from loader.excel_loader import ExcelLoader
 from loader.image_loader import ImageLoader
@@ -35,7 +36,7 @@ class FileChunkRunnable(BaseChunkRunnable):
                     try:
                         logger.debug(f'[{file_name}]格式为Markdown,转换Word格式')
                         response = requests.post(
-                            'http://pandoc-server.ops-pilot:8103/convert',
+                            f'{server_settings.pandoc_server_host}/convert',
                             data={'output': 'docx'},
                             files={'file': (pure_filename + file_type, content)}
                         )
@@ -52,14 +53,19 @@ class FileChunkRunnable(BaseChunkRunnable):
 
                     if file_type in [".ppt", ".pptx"]:
                         loader = PPTLoader(f.name)
+
                     elif file_type in [".pdf"]:
                         loader = PDFLoader(f.name, request.ocr_provider_address, request.enable_ocr_parse)
+
                     elif file_type in [".doc", ".docx"]:
                         loader = DocLoader(f.name)
+
                     elif file_type in [".xls", ".xlsx"]:
                         loader = ExcelLoader(f.name, request)
+
                     elif file_type in [".jpg", ".png", ".jpeg"]:
                         loader = ImageLoader(f.name, request)
+
                     else:
                         loader = TextLoader(f.name)
 

@@ -8,9 +8,9 @@ class BaseChunkRequest(CustomUserType):
     recursive_chunk_overlap: int = Field(0)
 
     enable_semantic_chunck_parse: bool = Field(False)
-    semantic_embedding_address: str = Field("http://fast-embed-server-zh.ops-pilot:8101")
+    semantic_embedding_address: str = Field("http://fast-embed-server.ops-pilot")
 
-    ocr_provider_address: str = Field("http://ocr-server.ops-pilot:8109")
+    ocr_provider_address: str = Field("http://ocr-server.ops-pilot")
     enable_ocr_parse: bool = Field(False)
 
     excel_header_row_parse: bool = Field(False)

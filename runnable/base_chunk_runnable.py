@@ -28,7 +28,7 @@ class BaseChunkRunnable:
         for doc in image_docs:
             docs.remove(doc)
 
-        # 语义分割
+        # 启用了语义分割，将文本块按照语义进行分段
         if request.enable_semantic_chunck_parse:
             logger.info(f'语义分割前的文档数：{len(docs)}')
             semantic_embedding_model = RemoteEmbeddings(request.semantic_embedding_address)
@@ -37,7 +37,7 @@ class BaseChunkRunnable:
             docs = semantic_chunker.split_documents(docs)
             logger.info(f'语义分割后的文档数：{len(docs)}')
 
-        # 递归分割
+        # 对文本进行递归分割
         if request.enable_recursive_chunk_parse:
             logger.info(f'递归分割前的文档数：{len(docs)}')
             text_splitter = RecursiveCharacterTextSplitter(
@@ -47,6 +47,7 @@ class BaseChunkRunnable:
             docs = text_splitter.split_documents(docs)
             logger.info(f'递归分割后的文档数：{len(docs)}')
 
+        # 整合
         docs = docs + table_docs + image_docs
 
         # 更新元数据

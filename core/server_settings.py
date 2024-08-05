@@ -6,6 +6,8 @@ class ServerSettings(BaseSettings):
     app_host: str = "0.0.0.0"
     app_port: int = 8000
 
+    pandoc_server_host: str = "http://pandoc-server.ops-pilot"
+
     class Config:
         env_file = ".env"
 
