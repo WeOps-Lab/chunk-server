@@ -16,8 +16,9 @@ class ImageLoader:
         docs = []
         with open(self.path, "rb") as file:
             file_remote = RemoteRunnable(self.chunk_request.ocr_provider_address)
-            content = file_remote.invoke({
+            docs = file_remote.invoke({
                 "file": base64.b64encode(file.read()).decode('utf-8'),
             })
-            docs.append(Document(content, metadata={"format": "image"}))
+            for doc in docs:
+                doc.metadata["format"]="imagee"
         return docs
