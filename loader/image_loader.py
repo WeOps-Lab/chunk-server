@@ -20,5 +20,5 @@ class ImageLoader:
                 "file": base64.b64encode(file.read()).decode('utf-8'),
             })
             for doc in docs:
-                doc.metadata["format"]="imagee"
+                doc.metadata["format"]="image"
         return docs

@@ -57,6 +57,7 @@ class PDFLoader:
                         # remove content where page_content is empty
                         for doc in content:
                             if doc.page_content:
+                                doc.metadata["format"]="imagee"
                                 text_docs.append(doc)
 
         with pdfplumber.open(self.file_path) as pdf:

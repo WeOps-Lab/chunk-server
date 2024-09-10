@@ -28,17 +28,17 @@ class FileChunkRunnable(BaseChunkRunnable):
             content = base64.b64decode(request.file.encode("utf-8"))
             file_name, file_type = os.path.splitext(request.file_name)
 
-            logger.debug(f'待处理文件名：{file_name}, 文件类型：{file_type}')
+            logger.debug(f"待处理文件名：{file_name}, 文件类型：{file_type}")
 
             pure_filename = file_name.split("/")[-1]
             with tempfile.NamedTemporaryFile(delete=False) as f:
                 if file_type in [".md"]:
                     try:
-                        logger.debug(f'[{file_name}]格式为Markdown,转换Word格式')
+                        logger.debug(f"[{file_name}]格式为Markdown,转换Word格式")
                         response = requests.post(
-                            f'{server_settings.pandoc_server_host}/convert',
-                            data={'output': 'docx'},
-                            files={'file': (pure_filename + file_type, content)}
+                            f"{server_settings.pandoc_server_host}/convert",
+                            data={"output": "docx"},
+                            files={"file": (pure_filename + file_type, content)},
                         )
                         response.raise_for_status()
                         f.write(response.content)
@@ -55,10 +55,18 @@ class FileChunkRunnable(BaseChunkRunnable):
                         loader = PPTLoader(f.name)
 
                     elif file_type in [".pdf"]:
-                        loader = PDFLoader(f.name, request.ocr_provider_address, request.enable_ocr_parse)
+                        loader = PDFLoader(
+                            f.name,
+                            request.ocr_provider_address,
+                            request.enable_ocr_parse,
+                        )
 
                     elif file_type in [".doc", ".docx"]:
-                        loader = DocLoader(f.name)
+                        loader = DocLoader(
+                            f.name,
+                            request.ocr_provider_address,
+                            request.enable_ocr_parse,
+                        )
 
                     elif file_type in [".xls", ".xlsx"]:
                         loader = ExcelLoader(f.name, request)
@@ -77,4 +85,6 @@ class FileChunkRunnable(BaseChunkRunnable):
             return []
 
     def instance(self):
-        return RunnableLambda(self.parse).with_types(input_type=FileChunkRequest, output_type=List[Document])
+        return RunnableLambda(self.parse).with_types(
+            input_type=FileChunkRequest, output_type=List[Document]
+        )
