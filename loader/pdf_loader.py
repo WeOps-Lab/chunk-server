@@ -54,8 +54,10 @@ class PDFLoader:
                         content = file_remote.invoke({
                             "file": base64.b64encode(file.read()).decode('utf-8'),
                         })
-
-                        text_docs.append(Document(content))
+                        # remove content where page_content is empty
+                        for doc in content:
+                            if doc.page_content:
+                                text_docs.append(doc)
 
         with pdfplumber.open(self.file_path) as pdf:
 
